@@ -5,13 +5,25 @@
       Chapter case   
 
       Custom Objects Used in Poker Games
-      Author: 
-      Date:       
+      Author: Darsh Pratap Singh
+      Date:   4/7/2026    
 
       Filename:       objects.js
  */
-
-
+/* Onjects defining the poker game*/
+let pokerGame = {
+   currentBank: null, 
+   currentBet: null,
+   placeBet: function() {
+      this.currentBank -= this.currentBet;
+      return this.currentBank;
+   }
+};
+/* Constructor function for poker cards */
+function pokerCard(cardSuit, cardRank) {
+   this.suit = cardSuit;
+   this.rank = cardRank;
+}
 
 
 

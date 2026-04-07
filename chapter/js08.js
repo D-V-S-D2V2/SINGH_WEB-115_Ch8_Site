@@ -4,8 +4,8 @@
       Chapter case   
 
       Draw Poker Game using Object Oriented Programming
-      Author: 
-      Date:       
+      Author: Darsh Pratap Singh
+      Date:   4/7/2026    
 
       Filename:       js08.js
  */
@@ -22,7 +22,18 @@ function playDrawPoker() {
    let betSelection = document.getElementById("bet");
    let bankBox = document.getElementById("bank");
    let cardImages = document.querySelectorAll("img.cardImg");
-    
+
+   // set the inital bank and bet values
+   pokerGame.currentBank = 500;
+   pokerGame.currentBet = 25;
+   
+   // Display the current bank value
+   bankBox.value = pokerGame.currentBank;
+
+   // Change the bet when the slection changes
+   betSelection.onchange = function() {
+      pokerGame.currentBet = parseInt(this.value);
+   }
    
       dealButton.addEventListener("click", function() {
       if (pokerGame.currentBank >= pokerGame.currentBet) {
@@ -33,8 +44,12 @@ function playDrawPoker() {
          standButton.disabled = false;      // Turn on the Stand Button
          statusBox.textContent = "";        // Erase any status messages
          
-
-   });
+         // Reduce the bank by the size of the bet
+         bankBox.value = pokerGame.placeBet();
+   } else {
+      statusBox.textContent = 'Insufficient Funds';
+   }
+});
    
    
    drawButton.addEventListener("click", function() {
