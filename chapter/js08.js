@@ -26,6 +26,13 @@ function playDrawPoker() {
    // set the inital bank and bet values
    pokerGame.currentBank = 500;
    pokerGame.currentBet = 25;
+
+   // Create a deck of shuffled cards
+   let myDeck = new pokerDeck();
+   myDeck.shuffle();
+
+   // create an empty poker hand object
+   let myHand = new pokerHand(5);
    
    // Display the current bank value
    bankBox.value = pokerGame.currentBank;
@@ -46,6 +53,31 @@ function playDrawPoker() {
          
          // Reduce the bank by the size of the bet
          bankBox.value = pokerGame.placeBet();
+
+         // get a new deck is there are less than 10 cards left
+         if (myDeck.cards.lenght < 10) {
+            myDeck = new pokerDeck();
+            myDeck.shuffle();
+         }
+
+         // deal 5 cards from the deck to the hand
+         myDeck.dealTo(myHand);
+         
+         // Display the card images on the table
+         for (let i = 0; i < cardImages.length; i++) {
+            cardImages[i].src = myHand.cards[i].cardImage();
+            
+            // flip the card images when clicked
+            cardImages[i].onclick = function() {
+               if (this.src.includes("cardback.png")) {
+                  // show the front of the card
+                  this.src = myHand.cards[i].cardImage();
+               } else {
+                  //show the back of the card
+                  this.src = "cardback.png";
+               }
+            }
+         }
    } else {
       statusBox.textContent = 'Insufficient Funds';
    }
@@ -59,8 +91,19 @@ function playDrawPoker() {
       drawButton.disabled = true;         // Turn off the Draw button
       standButton.disabled = true;        // Turn off the Stand Button
       
+      // replace the cards marked to be discraded
+      for (let i = 0; i < cardImages.length; i++) {
+         if (cardImages[i].src.includes("cardback.png")) {
+         // replace teh card and its image on the table
+         myHand.replaceCard(i, myDeck);
+         cardImages[i].src = myHand.cards[i].cardImage();
+         }
+      }
+      // Evaluate the hand drawn by user
+      statusBox.textContent = myHand.getHandValue();
 
-
+      //Update the bank value
+      bankBox.value = pokerGame.payBet(statusBox.textContent);
    });
    
     
@@ -71,7 +114,11 @@ function playDrawPoker() {
       drawButton.disabled = true;         // Turn off the Draw button
       standButton.disabled = true;        // Turn off the Stand Button  
 
-    
+      // evaluate teh hand drawn by user
+      statusBox.textContent = myHand.getHandValue();
+
+      // Update the bank value
+      bankBox.value = pokerGame.payBet(statusBox.textContent);
    });
    
    
